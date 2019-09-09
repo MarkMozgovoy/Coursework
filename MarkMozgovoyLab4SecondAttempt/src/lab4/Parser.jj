@@ -1,0 +1,49 @@
+/**
+* Mark Mozgovoy 10/25/18
+*/
+
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */
+options{  static = true;}PARSER_BEGIN(Parser)package lab4;
+
+public class Parser{  public static void main(String args []) throws ParseException  {    Parser parser = new Parser(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an expression like \"Mark_Mozgovoy_05/08/1997_X12345678;\" :");      try      {        switch (Parser.one_line())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        Parser.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(Parser)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{  < DIVIDE : "/" >}TOKEN :{  < DIGIT : [ "0"-"9" ] >
+| < CAPITAL: ["A"-"Z"] >
+| < LOWERCASE: ["a"-"z", "-", "'"] >
+| < DOB: ("0""1" | "0""2" | "0""3" | "0""4" | "0""5" | "0""6" | "0""7" | "0""8" | "0""9" | "1""0" | "1""1" | "1""2")< DIVIDE >((("0")(["1"-"9"])) | (("1")< DIGIT >) | (("2")< DIGIT >) | "30" | "31")< DIVIDE >(< DIGIT >< DIGIT>< DIGIT >< DIGIT >) >
+| < XNUMBER: ("X")< DIGIT >< DIGIT >< DIGIT >< DIGIT >< DIGIT >< DIGIT >< DIGIT >< DIGIT >>}int one_line() :{}{  fname() "_" lname() "_" dob() "_" xNum() ";"  {    return 0;  }| ";"  {    return 1;  }}
+
+void fname():
+{}
+{
+  (    < CAPITAL >
+  )
+  (    < CAPITAL >
+  | < LOWERCASE >
+  )+
+}
+
+void lname():
+{}
+{
+  (
+    < CAPITAL >
+  )
+  (
+    < CAPITAL >
+  | < LOWERCASE >
+  )+
+}
+
+void dob() :
+{}
+{
+  < DOB >
+}
+
+void xNum():
+{}
+{
+  (    < XNUMBER >
+  )
+}

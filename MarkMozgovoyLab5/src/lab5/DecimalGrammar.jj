@@ -1,0 +1,16 @@
+/**
+ * Mark Mozgovoy & Aakash Pahuja
+ */
+
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = true;}PARSER_BEGIN(DecimalGrammar)package lab5;
+
+public class DecimalGrammar{  public static void main(String args []) throws ParseException  {    DecimalGrammar parser = new DecimalGrammar(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an expression like \"-10.5 or 0.09\" :");      try      {        switch (DecimalGrammar.one_line())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        DecimalGrammar.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        DecimalGrammar.ReInit(System.in);      }    }  }}PARSER_END(DecimalGrammar)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{  < MINUS : "-" >
+| < PLUS : "+" >}TOKEN :{  < DIGIT : [ "1"-"9" ] >
+| < POINT : "." >
+| < ZERO_CASE : ("0")(< POINT >)(["0"-"9"])*< DIGIT >(["0"-"9"])* >
+| < DEFAULT_CASE : (< PLUS >|< MINUS >)?(< DIGIT >)(["0"-"9"])*< POINT >(["0"-"9"])+>}int one_line() :{}{  decimal() ";"  {    return 0;  }| ";"  {    return 1;  }}void decimal() :{}{
+  (    < DEFAULT_CASE >
+  )
+| (< ZERO_CASE >)}

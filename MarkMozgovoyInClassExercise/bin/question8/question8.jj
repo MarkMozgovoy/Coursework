@@ -1,0 +1,96 @@
+/**
+ * Mark Mozgovoy & Aakash Pahuja
+ */
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = true;}PARSER_BEGIN(question8)package question8;
+
+public class question8{  public static void main(String args []) throws ParseException  {    question8 parser = new question8(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an expression like \"for(int i = 5; i < stuff; i++) { stuff };\" :");      try      {        switch (question8.one_line())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        question8.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(question8)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{  < PLUS : "+" >
+| < MINUS : "-" >
+| < MULTIPLY : "*" >
+| < DIVIDE : "/" >
+| < OPEN_PARENTHESIS : "(" >
+| < CLOSED_PARENTHESIS : ")" >
+| < OPEN_BRACKET: "{" >
+| < CLOSED_BRACKET : "}" >
+| < OPEN_BRACE: "[" >
+| < CLOSED_BRACE: "]" >
+| < SEMICOLON: ";" >
+| < EQUALS : "=" >
+| < COMPARISON : < LESS > | < GREATER > >
+| < #LESS : "<" >
+| < #GREATER : ">" >}TOKEN :{  < NUMBER : (< DIGIT >)+ >
+| < #DIGIT : [ "0"-"9" ] >
+| < LETTER : ["A"-"Z","a"-"z"] >}int one_line() :{}{  for_statement() ";"  {    return 0;  }| ";"  {    return 1;  }}void for_statement() :{}{  keyword_for()
+  < OPEN_PARENTHESIS >
+  int_init()
+  length()
+  incrementation()
+  < CLOSED_PARENTHESIS >
+  < OPEN_BRACKET >
+  (    body() | for_statement()
+  )
+  < CLOSED_BRACKET >}void keyword_for() :
+{}
+{
+  "for"
+}
+
+void int_init() :
+{}
+{
+  (
+    "int"
+  )
+  < LETTER >
+  (
+    < LETTER >
+  | < NUMBER >
+  )*
+  < EQUALS >
+  < NUMBER >
+  < SEMICOLON >
+}
+
+void length() :
+{}
+{
+  < LETTER >
+  (
+    < LETTER >
+  | < NUMBER >
+  )*
+  (< COMPARISON >(< EQUALS >)? | < EQUALS >< EQUALS >)
+  (
+    < LETTER >
+  | < NUMBER >
+  )
+  (
+    < LETTER >
+  | < NUMBER >
+  )*
+  < SEMICOLON >
+}
+
+void incrementation() :
+{}
+{
+  < LETTER >
+  (
+    < LETTER >
+  | < NUMBER >
+  )*
+  (
+    "++"
+  | "--"
+  )
+}
+
+void body() :
+{}
+{
+  (
+    < LETTER >
+  | < NUMBER >
+  )+
+}

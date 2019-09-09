@@ -1,0 +1,53 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = true;}PARSER_BEGIN(WitEvalGrammar)package lab6;
+
+public class WitEvalGrammar{  public static void main(String args []) throws ParseException  {    WitEvalGrammar parser = new WitEvalGrammar(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an expression like \"[alpha = 2.5, beta = 10, gamma = -0.1 | alpha * alpha + alpha * beta + 13, 2 * (gamma + 1)]\" :");      try      {        switch (WitEvalGrammar.one_line())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        WitEvalGrammar.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(WitEvalGrammar)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{  < PLUS : "+" >| < MINUS : "-" >| < MULTIPLY : "*" >| < DIVIDE : "/" >
+| < EQUAL : "=" >}TOKEN :{
+  < LETTER : ["A"-"Z", "a"-"z"] >| < NUMBER : < DIGIT > >| < #DIGIT : [ "0"-"9" ] >}int one_line() :{}{  witeval_statement()  {    return 0;  }| ";"  {    return 1;  }}void witeval_statement() :{}{
+  "["  multiple_declarations()
+  "|"
+  multiple_expressions()
+  "]"}void multiple_declarations() :{}{  declaration()(","declaration())*}void multiple_expressions() :{}{  final_expression()(","final_expression())*}
+
+void final_expression() :
+{}
+{
+  expression()
+}void declaration() :{}{  variable()(< EQUAL >)floatNum()}
+
+void expression() :
+{}
+{
+  (variable() | floatNum() | expression_parenthesis())
+  (
+    LOOKAHEAD(2)
+    (      (< PLUS > | < MINUS > | < MULTIPLY > | < DIVIDE >)
+      (variable() | floatNum())
+    )
+  | (
+      (< PLUS > | < MINUS > | < MULTIPLY > | < DIVIDE >)
+      expression_parenthesis()
+    )
+  )*
+}
+
+void expression_parenthesis() :
+{}
+{
+  "("
+  expression()
+  ")"
+}
+
+void variable() :
+{}
+{
+  (< LETTER >)(< LETTER > | < NUMBER >)*
+}
+
+void floatNum() :
+{}
+{
+  (< MINUS >)?(< NUMBER >)+("."(< NUMBER >)+)?
+}

@@ -1,0 +1,46 @@
+/**
+ * Mark Mozgovoy & Aakash Pahuja
+ */
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = true;}PARSER_BEGIN(question7)package question7;
+
+public class question7{  public static void main(String args []) throws ParseException  {    question7 parser = new question7(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an expression like \"while(x<=5) { stuff };\" :");      try      {        switch (question7.one_line())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        question7.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(question7)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{  < PLUS : "+" >| < MINUS : "-" >| < MULTIPLY : "*" >| < DIVIDE : "/" >
+| < OPEN_PARENTHESIS : "(" >
+| < CLOSED_PARENTHESIS : ")" >
+| < OPEN_BRACE : "{" >
+| < CLOSED_BRACE : "}" >
+| < EQUALS : "=" >
+| < COMPARISON : (< LESS >) | (< GREATER >)>
+| < #LESS : "<" >
+| < #GREATER : ">" >}TOKEN :{  < NUMBER : (< DIGIT >)+ >
+| < #DIGIT : [ "0"-"9" ] >
+| < LETTER : ["A"-"Z","a"-"z"] >}int one_line() :{}{  while_statement() ";"  {    return 0;  }| ";"  {    return 1;  }}void while_statement() :{}{  (    "while"
+  )
+  (    < OPEN_PARENTHESIS >
+  )
+  (    condition()
+  )
+  (    < CLOSED_PARENTHESIS >
+  )
+  (    < OPEN_BRACE >
+  )
+  (    body() | while_statement()
+  )
+  (    < CLOSED_BRACE >
+  )}void condition() :{}{  < LETTER >
+  (
+    < LETTER >
+  | < NUMBER >
+  )*
+  (< COMPARISON >(< EQUALS >)? | < EQUALS >< EQUALS >)
+  (
+    < LETTER >
+  | < NUMBER >
+  )
+  (
+    < LETTER >
+  | < NUMBER >
+  )*}void body() :{}{  (    < LETTER >
+  | < NUMBER >
+  )+}

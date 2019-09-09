@@ -1,0 +1,52 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = true;}PARSER_BEGIN(MyNewGrammar)package lab4;
+
+public class MyNewGrammar{  public static void main(String args []) throws ParseException  {    MyNewGrammar parser = new MyNewGrammar(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an expression like \" x = FBI; \" :");      try      {        switch (MyNewGrammar.one_line())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        MyNewGrammar.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(MyNewGrammar)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{  < PLUS : "+" >| < MINUS : "-" >| < MULTIPLY : "*" >| < DIVIDE : "/" >
+| < EQUALS : "=" >}TOKEN :{
+  < UPPERCASE : (< UCASE >)+ >
+| < #UCASE : ["A"-"Z"] >
+| < LOWERCASE : (< LCASE >)+ >
+| < #LCASE : ["a"-"z"] >| < CONSTANT : (< DIGIT >)+ >
+| < #DIGIT : [ "0"-"9" ] >
+}int one_line() :{}{  expression() ";"  {    return 0;  }| ";"  {    return 1;  }}
+//an expression is made up of 3 parts, a variable name, an equal sign, and a string value (in that order)
+void expression() :
+{}
+{
+  varName()
+  (
+    < EQUALS >
+  )
+  (	stringValue()
+  )
+}
+
+//a variable name is a string of letters which begins with a lower case letter
+void varName() :
+{}
+{
+	(	  < LOWERCASE >
+	)
+	(
+	  < LOWERCASE >
+	| < UPPERCASE >	)*
+}
+
+//string value can be any string of letters which make up an acronym (all upper case) or a variable name (begins with lower case)
+void stringValue() :
+{}
+{
+  stringAcronym()
+| varName()
+}
+
+//a string value is a string of letters which are all upper case
+void stringAcronym() :
+{}
+{
+	(	  < UPPERCASE >
+	)
+	(
+	  < UPPERCASE >	)*
+}

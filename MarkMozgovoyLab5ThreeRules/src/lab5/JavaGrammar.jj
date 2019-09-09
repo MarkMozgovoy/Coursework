@@ -1,0 +1,158 @@
+/**
+ * Mark Mozgovoy & Aakash Pahuja
+ */options{  static = true;}PARSER_BEGIN(JavaGrammar)package lab5;
+
+public class JavaGrammar{  public static void main(String args []) throws ParseException  {    JavaGrammar parser = new JavaGrammar(System.in);    while (true)    {      System.out.println("Reading from standard input...");      System.out.print("Enter an expression like \"for(int i = 5; i < stuff; i++) {whatever};, String[] array = {x, y};, or System.out.println(stuff);\" :");      try      {        switch (JavaGrammar.one_line())        {          case 0 :           System.out.println("OK.");          break;          case 1 :           System.out.println("Goodbye.");          break;          default :           break;        }      }      catch (Exception e)      {        System.out.println("NOK.");        System.out.println(e.getMessage());        JavaGrammar.ReInit(System.in);      }      catch (Error e)      {        System.out.println("Oops.");        System.out.println(e.getMessage());        break;      }    }  }}PARSER_END(JavaGrammar)SKIP :{  " "| "\r"| "\t"| "\n"}TOKEN : /* OPERATORS */{  < PLUS : "+" >| < MINUS : "-" >| < MULTIPLY : "*" >| < DIVIDE : "/" >
+| < OPEN_PARENTHESIS : "(" >
+| < CLOSED_PARENTHESIS : ")" >
+| < OPEN_BRACKET: "{" >
+| < CLOSED_BRACKET : "}" >
+| < OPEN_BRACE: "[" >
+| < CLOSED_BRACE: "]" >
+| < SEMICOLON: ";" >
+| < EQUALS : "=" >
+| < COMPARISON : < LESS > | < GREATER > >
+| < #LESS : "<" >
+| < #GREATER : ">" >}TOKEN :{
+  < NUMBER : (< DIGIT >)+ >
+| < #DIGIT : [ "0"-"9" ] >
+| < LETTER : ["A"-"Z","a"-"z"] >}int one_line() :{}{  (    for_statement() ";"
+  )
+  {
+    return 0;
+  }
+| (
+  	print_statement () ";"
+  )
+  {
+    return 0;
+  }
+| (
+  	array_statement() ";"
+  )  {    return 0;  }| ";"  {    return 1;  }}
+
+void array_statement() :
+{}
+{  var_desc()
+  < EQUALS >
+  array_definition()
+}
+
+void var_desc() :
+{}
+{  (    < LETTER >
+  )
+  (    < LETTER >
+  | < NUMBER >
+  )*
+  < OPEN_BRACE >
+  < CLOSED_BRACE >
+  (
+    < LETTER >
+  )
+  (
+    < LETTER >
+  | < NUMBER >
+  )*
+}
+
+void array_definition() :
+{}
+{  (    "new"
+  (
+    < LETTER >
+  )
+  (
+    < LETTER >
+  | < NUMBER >
+  )*
+  < OPEN_BRACE >
+  < NUMBER >
+  < CLOSED_BRACE >
+  )
+| (
+  < OPEN_BRACKET >
+  (
+    < LETTER >
+  | < NUMBER >
+  )
+  (
+    ","    (      < LETTER >
+  | < NUMBER >
+)
+  )*
+  < CLOSED_BRACKET >
+)
+}
+void print_statement() :
+{}
+{
+  system_out_print()
+  < OPEN_PARENTHESIS >
+  body_print()
+  < CLOSED_PARENTHESIS >
+}
+
+void system_out_print() :
+{}
+{
+  "System.out.println"
+}
+
+void body_print():
+{}
+{
+  (("\"") (< LETTER > | < NUMBER >)* ("\"")) | (< LETTER >(< LETTER > | < NUMBER >)*) | < NUMBER >
+}
+void for_statement() :{}{  keyword_for()
+  < OPEN_PARENTHESIS >
+  int_init()
+  length()
+  incrementation()
+  < CLOSED_PARENTHESIS >
+  < OPEN_BRACKET >
+  body()
+  < CLOSED_BRACKET >}void keyword_for() :{}{  "for"}void int_init() :{}{  (    "int"
+  )
+  < LETTER >
+  (    < LETTER >
+  | < NUMBER >
+  )*
+  < EQUALS >
+  < NUMBER >
+  < SEMICOLON >}void length() :{}{  < LETTER >
+  (
+    < LETTER >
+  | < NUMBER >
+  )*
+  (< COMPARISON >(< EQUALS >)? | < EQUALS >< EQUALS >)
+  (    < LETTER >
+  | < NUMBER >
+  )
+  (
+    < LETTER >
+  | < NUMBER >
+  )*
+  < SEMICOLON >}
+
+void incrementation() :
+{}
+{
+  < LETTER >
+  (
+    < LETTER >
+  | < NUMBER >
+  )*
+  (    "++"
+  | "--"
+  )
+}
+
+void body() :
+{}
+{
+  (
+    < LETTER >
+  | < NUMBER >
+  )*
+}
